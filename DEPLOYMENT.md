@@ -38,9 +38,11 @@ Crear `backend/.env`:
 PORT=3000
 NODE_ENV=production
 DB_HOST=localhost
+DB_PORT=3306
 DB_USER=usuario_mysql
 DB_PASSWORD=password_mysql
 DB_NAME=pequeaventuras_db
+MYSQL_PUBLIC_URL=
 JWT_SECRET=un_secreto_largo_y_privado
 JWT_EXPIRES_IN=8h
 FRONTEND_URL=https://tudominio.com
@@ -48,6 +50,14 @@ CORS_ORIGINS=https://tudominio.com
 WHATSAPP_NUMBER=51930700147
 UPLOADS_DIR=src/uploads
 ```
+
+Para Render conectado a Railway MySQL, se recomienda usar la variable completa de Railway:
+
+```env
+MYSQL_PUBLIC_URL=mysql://root:password@host.proxy.rlwy.net:38913/railway
+```
+
+Si `MYSQL_PUBLIC_URL` esta configurada, el backend la usa como prioridad y no necesita `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` ni `DB_NAME` para conectarse.
 
 Iniciar:
 

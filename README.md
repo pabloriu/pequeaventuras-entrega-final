@@ -72,9 +72,11 @@ Crear `backend/.env` tomando como base `backend/.env.example`:
 PORT=3000
 NODE_ENV=development
 DB_HOST=localhost
+DB_PORT=3306
 DB_USER=root
 DB_PASSWORD=
 DB_NAME=pequeaventuras_db
+MYSQL_PUBLIC_URL=
 JWT_SECRET=cambia_este_secreto_largo_en_produccion
 JWT_EXPIRES_IN=8h
 FRONTEND_URL=http://localhost:5173
@@ -182,6 +184,8 @@ Administracion:
 - Cambiar `JWT_SECRET` por un valor largo y privado.
 - Cambiar la contrasena del administrador inicial.
 - Configurar `CORS_ORIGINS` con el dominio real del frontend.
+- Para Render con Railway MySQL, configurar `MYSQL_PUBLIC_URL` con la URL completa de Railway, por ejemplo `mysql://root:password@host.proxy.rlwy.net:38913/railway`.
+- Si `MYSQL_PUBLIC_URL` existe, el backend la usa antes que `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD` y `DB_NAME`.
 - Servir el frontend compilado desde `frontend/dist`.
 - Servir el backend con un proceso Node persistente.
 - Usar HTTPS.
