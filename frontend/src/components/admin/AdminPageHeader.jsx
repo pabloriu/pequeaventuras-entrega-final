@@ -1,17 +1,29 @@
-function AdminPageHeader({ title, description, actionLabel, onAction }) {
+const AdminPageHeader = ({
+  title,
+  description,
+  actionLabel,
+  onAction,
+}) => {
   return (
-    <div className="admin-page-header">
-      <div>
-        <h1>{title}</h1>
-        {description && <p>{description}</p>}
+    <>
+      <div className="admin-page-header">
+        <div>
+          <h1>{title}</h1>
+          {description ? <p>{description}</p> : null}
+        </div>
+
+        {actionLabel ? (
+          <button
+            type="button"
+            className="admin-primary"
+            onClick={onAction}
+          >
+            {actionLabel}
+          </button>
+        ) : null}
       </div>
-      {actionLabel && (
-        <button className="admin-primary" type="button" onClick={onAction}>
-          {actionLabel}
-        </button>
-      )}
-    </div>
+    </>
   );
-}
+};
 
 export default AdminPageHeader;
