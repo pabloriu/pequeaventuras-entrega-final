@@ -5,20 +5,29 @@ function BannerSlider({ banners }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
-    if (banners.length <= 1) return undefined;
+    if (banners.length <= 1) {
+      return;
+    }
 
-    const interval = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % banners.length);
+    const timer = window.setInterval(function () {
+      setActiveIndex(function (current) {
+        return (current + 1) % banners.length;
+      });
     }, 5000);
 
-    return () => window.clearInterval(interval);
+    return function () {
+      window.clearInterval(timer);
+    };
   }, [banners.length]);
 
-  if (!banners.length) {
+  if (banners.length === 0) {
     return (
       <section className="hero hero-empty">
         <div className="hero-copy">
-          <span className="hero-pill"><i aria-hidden="true" />Ofertas que enamoran</span>
+          <span className="hero-pill">
+            <i aria-hidden="true" />
+            Ofertas que enamoran
+          </span>
           <h1>PequeAventuras</h1>
           <p>Productos para acompanar cada etapa de crecimiento.</p>
         </div>
@@ -27,41 +36,72 @@ function BannerSlider({ banners }) {
   }
 
   const banner = banners[activeIndex];
-  const titleWords = String(banner.titulo || '').split(' ');
-  const titleLead = titleWords.length > 2 ? titleWords.slice(0, -1).join(' ') : banner.titulo;
-  const titleAccent = titleWords.length > 2 ? titleWords.at(-1) : '';
+
+  const words = String(banner.titulo || '').split(' ');
+
+  let titleLead = banner.titulo;
+  let titleAccent = '';
+
+  if (words.length > 2) {
+    titleLead = words.slice(0, words.length - 1).join(' ');
+    titleAccent = words[words.length - 1];
+  }
 
   return (
     <section className="hero">
-      <span className="hero-balloon" aria-hidden="true" />
-      <span className="hero-star hero-star-one" aria-hidden="true" />
-      <span className="hero-star hero-star-two" aria-hidden="true" />
-      <span className="hero-heart" aria-hidden="true" />
+      <span className="hero-balloon" aria-hidden="true"></span>
+      <span className="hero-star hero-star-one" aria-hidden="true"></span>
+      <span className="hero-star hero-star-two" aria-hidden="true"></span>
+      <span className="hero-heart" aria-hidden="true"></span>
+
       <div className="hero-copy">
-        <span className="hero-pill"><i aria-hidden="true" />Ofertas que enamoran</span>
+        <span className="hero-pill">
+          <i aria-hidden="true" />
+          Ofertas que enamoran
+        </span>
+
         <h1>
           <span>{titleLead}</span>
-          {titleAccent && <strong>{titleAccent}</strong>}
+          {titleAccent ? <strong>{titleAccent}</strong> : null}
         </h1>
+
         <p>{banner.descripcion_corta}</p>
+
         <div className="hero-actions">
-          <a className="primary-button" href="/promociones"><span className="button-tag" />Ver promociones</a>
-          <a className="outline-button" href="/#categorias"><span className="button-grid" />Explorar categorias</a>
+          <a className="primary-button" href="/promociones">
+            <span className="button-tag" />
+            Ver promociones
+          </a>
+
+          <a className="outline-button" href="/#categorias">
+            <span className="button-grid" />
+            Explorar categorias
+          </a>
         </div>
       </div>
+
       <div className="hero-image">
-        <img src={getImageUrl(banner.imagen)} alt={banner.titulo} onError={handleImageError} />
+        <img
+          src={getImageUrl(banner.imagen)}
+          alt={banner.titulo}
+          onError={handleImageError}
+        />
       </div>
+
       <div className="slider-dots" aria-label="Banners">
-        {banners.map((item, index) => (
-          <button
-            key={item.id_banner}
-            className={index === activeIndex ? 'active' : ''}
-            type="button"
-            onClick={() => setActiveIndex(index)}
-            aria-label={`Mostrar banner ${index + 1}`}
-          />
-        ))}
+        {banners.map(function (item, index) {
+          return (
+            <button
+              key={item.id_banner}
+              type="button"
+              className={index === activeIndex ? 'active' : ''}
+              onClick={function () {
+                setActiveIndex(index);
+              }}
+              aria-label={`Mostrar banner ${index + 1}`}
+            />
+          );
+        })}
       </div>
     </section>
   );
