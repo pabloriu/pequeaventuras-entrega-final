@@ -6,14 +6,18 @@ import { AdminAuthProvider } from './context/AdminAuthContext.jsx';
 import { CartProvider } from './context/CartContext.jsx';
 import './styles.css';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <AdminAuthProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </AdminAuthProvider>
-    </BrowserRouter>
-  </React.StrictMode>
+const root = ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(
+  <>
+    <React.StrictMode>
+      <BrowserRouter>
+        <AdminAuthProvider>
+          <CartProvider>
+            <App />
+          </CartProvider>
+        </AdminAuthProvider>
+      </BrowserRouter>
+    </React.StrictMode>
+  </>
 );
