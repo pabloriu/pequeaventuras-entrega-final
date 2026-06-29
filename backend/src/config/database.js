@@ -1,20 +1,24 @@
 import mysql from 'mysql2/promise';
 import { env } from './env.js';
 
-const poolOptions = env.db.uri
-  ? {
-      uri: env.db.uri
-    }
-  : {
-      host: env.db.host,
-      port: env.db.port,
-      user: env.db.user,
-      password: env.db.password,
-      database: env.db.database
-    };
+let config;
+
+if (env.db.uri) {
+  config = {
+    uri: env.db.uri
+  };
+} else {
+  config = {
+    host: env.db.host,
+    port: env.db.port,
+    user: env.db.user,
+    password: env.db.password,
+    database: env.db.database
+  };
+}
 
 export const pool = mysql.createPool({
-  ...poolOptions,
+  ...config,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
