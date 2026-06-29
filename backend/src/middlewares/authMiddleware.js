@@ -1,35 +1,40 @@
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
 import { pool } from '../config/database.js';
-import { AppError } from '../utils/AppError.js';
-import { asyncHandler } from '../utils/asyncHandler.js';
+import { apperror } from '../utils/apperror.js';
+import { asynchandler } from '../utils/asynchandler.js';
 
-export const authenticate = asyncHandler(async (req, _res, next) => {
-  const header = req.headers.authorization || '';
-  const [scheme, token] = header.split(' ');
+export const authenticate = asynchandler(async (req, _res, next) => {
+  const authorization = req.headers.authorization ?? '';
+  const parts = authorization.split(' ');
+  const scheme = parts[0];
+  const token = parts[1];
 
-  if (scheme !== 'Bearer' || !token) {
-    throw new AppError('Token de autenticacion requerido', 401);
+  if (!(scheme === 'Bearer' && token)) {
+    throw new apperror('Token de autenticacion requerido', 401);
   }
 
   let payload;
+
   try {
     payload = jwt.verify(token, env.jwtSecret);
-  } catch (_error) {
-    throw new AppError('Token invalido o expirado', 401);
+  } catch {
+    throw new apperror('Token invalido o expirado', 401);
   }
 
-  const [rows] = await pool.query(
-    `SELECT id_admin, nombre_completo, correo, usuario, rol, estado
-     FROM administradores
-     WHERE id_admin = ? AND estado = 1`,
-    [payload.id_admin]
-  );
+  const query = `
+    SELECT id_admin, nombre_completo, correo, usuario, rol, estado
+    FROM administradores
+    WHERE id_admin = ? AND estado = 1
+  `;
 
-  if (rows.length === 0) {
-    throw new AppError('Administrador no autorizado', 401);
+  const [rows] = await pool.query(query, [payload.id_admin]);
+
+  if (!rows.length) {
+    throw new apperror('Administrador no autorizado', 401);
   }
 
   req.admin = rows[0];
-  next();
+
+  return next();
 });
